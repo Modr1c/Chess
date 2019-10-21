@@ -74,10 +74,12 @@ public class ChessOrGrid : MonoBehaviour
     /// </summary>
     private void GridOrChessBehavior(int itemColorID, int x, int y)
     {
+        gameManager.HideCanEatUI();
         int FromX, FromY, ToX, ToY;
         switch (itemColorID)
         {
             case 0:
+                gameManager.ClearCurrentCanMoveUIStack();
                 ToX = x;
                 ToY = y;
                 if (gameManager.lastChessOrGrid == null)
@@ -98,11 +100,14 @@ public class ChessOrGrid : MonoBehaviour
                     }
                     FromX = gameManager.lastChessOrGrid.xIndex;
                     FromY = gameManager.lastChessOrGrid.yIndex;
-                    bool canMove = gameManager.rules.IsValidMove(FromX, FromY, ToX, ToY);
+                    bool canMove = gameManager.rules.IsValidMove(gameManager.chessBoard,FromX, FromY, ToX, ToY);
                     if (!canMove)
                     {
                         return;
                     }
+                    int chessOneID = gameManager.chessBoard[FromX, FromY];
+                    int chessTwoID = gameManager.chessBoard[ToX, ToY];
+                    gameManager.chessRegreting.AddChess(gameManager.chessRegreting.regretCount, FromX, FromY, ToX, ToY, chessOneID, chessTwoID);
                     gameManager.movingOfChess.IsMove(gameManager.lastChessOrGrid.gameObject, gridGo, FromX, FromY, ToX, ToY);
                     UIManager.Instance.ShowTip("黑方走");
                     gameManager.checkmate.JudgeIfCheckmate();
@@ -123,11 +128,14 @@ public class ChessOrGrid : MonoBehaviour
                     }
                     FromX = gameManager.lastChessOrGrid.xIndex;
                     FromY = gameManager.lastChessOrGrid.yIndex;
-                    bool canMove = gameManager.rules.IsValidMove(FromX, FromY, ToX, ToY);
+                    bool canMove = gameManager.rules.IsValidMove(gameManager.chessBoard,FromX, FromY, ToX, ToY);
                     if (!canMove)
                     {
                         return;
                     }
+                    int chessOneID = gameManager.chessBoard[FromX, FromY];
+                    int chessTwoID = gameManager.chessBoard[ToX, ToY];
+                    gameManager.chessRegreting.AddChess(gameManager.chessRegreting.regretCount, FromX, FromY, ToX, ToY, chessOneID, chessTwoID);
                     gameManager.movingOfChess.IsMove(gameManager.lastChessOrGrid.gameObject, gridGo, FromX, FromY, ToX, ToY);
                     UIManager.Instance.ShowTip("红方走");
                     gameManager.checkmate.JudgeIfCheckmate();
@@ -137,11 +145,12 @@ public class ChessOrGrid : MonoBehaviour
                 }
                 break;
             case 1:
+                gameManager.ClearCurrentCanMoveUIStack();
                 if (!gameManager.chessMove)
                 {
                     FromX = x;
                     FromY = y;
-
+                    gameManager.movingOfChess.ClickChess(FromX, FromY);
                     gameManager.lastChessOrGrid = this;
                     gameManager.ShowClickUI(transform);
                 }
@@ -160,11 +169,14 @@ public class ChessOrGrid : MonoBehaviour
                     FromY = gameManager.lastChessOrGrid.yIndex;
                     ToX = x;
                     ToY = y;
-                    bool canMove = gameManager.rules.IsValidMove(FromX, FromY, ToX, ToY);
+                    bool canMove = gameManager.rules.IsValidMove(gameManager.chessBoard,FromX, FromY, ToX, ToY);
                     if (!canMove)
                     {
                         return;
                     }
+                    int chessOneID = gameManager.chessBoard[FromX, FromY];
+                    int chessTwoID = gameManager.chessBoard[ToX, ToY];
+                    gameManager.chessRegreting.AddChess(gameManager.chessRegreting.regretCount, FromX, FromY, ToX, ToY, chessOneID, chessTwoID);
                     gameManager.movingOfChess.IsEat(gameManager.lastChessOrGrid.gameObject, gameObject, FromX, FromY, ToX, ToY);
                     gameManager.chessMove = false;
                     UIManager.Instance.ShowTip("黑方走");
@@ -174,10 +186,12 @@ public class ChessOrGrid : MonoBehaviour
                 }
                 break;
             case 2:
+                gameManager.ClearCurrentCanMoveUIStack();
                 if (gameManager.chessMove)
                 {
                     FromX = x;
                     FromY = y;
+                    gameManager.movingOfChess.ClickChess(FromX, FromY);
                     gameManager.lastChessOrGrid = this;
                     gameManager.ShowClickUI(transform);
                 }
@@ -196,11 +210,14 @@ public class ChessOrGrid : MonoBehaviour
                     FromY = gameManager.lastChessOrGrid.yIndex;
                     ToX = x;
                     ToY = y;
-                    bool canMove = gameManager.rules.IsValidMove(FromX, FromY, ToX, ToY);
+                    bool canMove = gameManager.rules.IsValidMove(gameManager.chessBoard,FromX, FromY, ToX, ToY);
                     if (!canMove)
                     {
                         return;
                     }
+                    int chessOneID = gameManager.chessBoard[FromX, FromY];
+                    int chessTwoID = gameManager.chessBoard[ToX, ToY];
+                    gameManager.chessRegreting.AddChess(gameManager.chessRegreting.regretCount, FromX, FromY, ToX, ToY, chessOneID, chessTwoID);
                     gameManager.movingOfChess.IsEat(gameManager.lastChessOrGrid.gameObject, gameObject, FromX, FromY, ToX, ToY);
                     gameManager.chessMove = true;
                     gameManager.lastChessOrGrid = null;

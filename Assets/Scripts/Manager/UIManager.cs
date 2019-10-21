@@ -183,7 +183,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void Undo()
     {
-
+        gameManager.chessRegreting.RegretChess();
     }
 
     /// <summary>
@@ -191,7 +191,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void Replay()
     {
-
+        gameManager.Replay();
     }
 
     /// <summary>

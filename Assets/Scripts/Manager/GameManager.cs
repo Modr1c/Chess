@@ -89,6 +89,7 @@ public class GameManager : MonoBehaviour
     public ChessOrGrid lastChessOrGrid;
     public Rules rules;
     public MovingOfChess movingOfChess;
+    public ChessRegreting chessRegreting;
     public Checkmate checkmate;
     /// <summary>
     /// 被吃掉的棋子池
@@ -119,7 +120,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         //Test
-        chessPeople = 1;
+        chessPeople = 2;
         ResetGame();
     }
 
@@ -143,8 +144,8 @@ public class GameManager : MonoBehaviour
             {9,10,13,12,8,12,13,10,9}
         };
 
-        boardGrid = new GameObject[Constants.boardHeight, Constants.boardWidth];
-        if (chessPeople == 1)
+        boardGrid = new GameObject[10, 9];
+        if (chessPeople == 1 || chessPeople == 2)
         {
             boardGo = boardGos[0];
         }
@@ -156,6 +157,11 @@ public class GameManager : MonoBehaviour
         InitChess();
         rules = new Rules();
         movingOfChess = new MovingOfChess(this);
+        chessRegreting = new ChessRegreting
+        {
+            regretCount = 0,
+            chessSteps = new ChessRegreting.Chess[400]
+        };
         checkmate = new Checkmate();
         canMoveUIStack = new Stack<GameObject>();
         for (int i = 0; i < Constants.canMoveUIStackLength; i++)
@@ -171,16 +177,16 @@ public class GameManager : MonoBehaviour
     private void InitGrid()
     {
         float posX = 0, posY = 0;
-        for (int i = 0; i < Constants.boardHeight; i++)
+        for (int i = 0; i < 10; i++)
         {
-            for (int j = 0; j < Constants.boardWidth; j++)
+            for (int j = 0; j < 9; j++)
             {
                 GameObject itemGo = Instantiate(gridGo);
                 itemGo.transform.SetParent(boardGo.transform);
                 itemGo.name = "Item[" + i.ToString() + "," + j.ToString() + "]";
                 itemGo.transform.localPosition = new Vector3(posX, posY, 0);
                 posX += Constants.gridWidth;
-                if (posX >= Constants.gridWidth * Constants.boardWidth)
+                if (posX >= Constants.gridWidth * 9)
                 {
                     posY -= Constants.gridHeight;
                     posX = 0;
@@ -197,9 +203,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void InitChess()
     {
-        for (int i = 0; i < Constants.boardHeight; i++)
+        for (int i = 0; i < 10; i++)
         {
-            for (int j = 0; j < Constants.boardWidth; j++)
+            for (int j = 0; j < 9; j++)
             {
                 GameObject item = boardGrid[i, j];
                 switch (chessBoard[i, j])
@@ -279,6 +285,22 @@ public class GameManager : MonoBehaviour
     {
         itemGo.transform.SetParent(eatChessPool.transform);
         MTools.SetLocalPositionZero(itemGo);
+    }
+
+    /// <summary>
+    /// 单机重玩方法
+    /// </summary>
+    public void Replay()
+    {
+        HideLastPositionUI();
+        HideClickUI();
+        HideCanEatUI();
+        ClearCurrentCanMoveUIStack();
+        lastChessOrGrid = null;
+        for (int i = chessRegreting.regretCount; i > 0; i--)
+        {
+            chessRegreting.RegretChess();
+        }
     }
 
     #region 游戏中UI显示隐藏处理

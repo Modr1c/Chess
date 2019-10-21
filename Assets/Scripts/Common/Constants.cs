@@ -16,8 +16,5 @@ public class Constants
 {
     public const int gridWidth = 105;
     public const int gridHeight = 106;
-    public const int gridTotalNum = 90;
-    public const int boardWidth = 9;
-    public const int boardHeight = 10;
-    public const int canMoveUIStackLength = 40;
+    public const int canMoveUIStackLength = 20;
 }
